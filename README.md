@@ -1,21 +1,30 @@
-# Visual Product Matcher
+Visual Product Matcher
 
-A modern, mobile-first web app that finds visually similar products from a 60-item demo catalog.
+A modern, mobile-friendly web application that helps users find visually similar products from a demo catalog of 60 items.
 
-Live (Vercel): Publish from the v0 preview using the “Publish” button.
-Repository: Click the GitHub icon in the top-right of the v0 preview to push this code.
+Features
 
-## Features
-- Upload image file or paste image URL (preview included)
-- Uses MobileNet (TensorFlow.js) to compute image embeddings client-side
-- Cosine similarity ranking against cached catalog embeddings
-- Filters: minimum similarity slider, category select
-- Clean, responsive UI (TailwindCSS + shadcn/ui)
-- Loading + error states, localStorage caching of catalog embeddings
+Upload an image file or paste an image URL (with live preview).
 
-## Running locally (in v0)
-- Open the Preview; everything runs in-browser with TF.js (no API keys required).
-- Click Publish (Vercel) to deploy a live URL.
+Uses MobileNet (TensorFlow.js) to extract image features directly in the browser.
 
-## Technical Approach (≈200 words)
-This app uses a lightweight, client-side embedding pipeline so it deploys easily and runs on the free tier. On load, the app initializes TensorFlow.js (WebGL backend) and lazily downloads MobileNet (V2, alpha=0.5) to balance accuracy, size, and speed. To avoid CORS and ensure consistent embeddings, all 60 product images are hosted locally under /public/products. We compute product embeddings once per session with a small concurrency throttle and show a progress bar; embeddings are cached in localStorage keyed by the model version. For a user query, we accept either a local upload or a URL, render a preview, extract an embedding via model.infer(image, true), and compute cosine similarity against the catalog embeddings. Results are ranked and filtered by category and a similarity threshold with accessible, responsive components from shadcn/ui. The UI deliberately mirrors a polished e‑commerce prototype: clear hierarchy, compact control panel, consistent spacing, subtle hover states, and WCAG‑friendly contrast using a simple palette (brand blue, neutrals, and a soft accent). Code is modular, commented at decision points, and avoids hidden magic. The architecture is framework-native (Next.js App Router) and deploys cleanly to Vercel with no server dependencies.
+Ranks products by cosine similarity against pre-computed catalog embeddings.
+
+Filtering options: similarity threshold slider and category selection.
+
+Responsive, clean UI built with TailwindCSS and shadcn/ui components.
+
+Loading indicators, error handling, and local caching of catalog embeddings for faster use.
+
+Live Deployed Link - https://visualproductmatcher.vercel.app
+
+
+
+
+Working & Deployment:
+
+The application is designed to run fully in the browser, making it lightweight and easy to deploy. On startup, TensorFlow.js initializes with the WebGL backend for efficient performance, and the MobileNet V2 model (with reduced alpha for speed and size) is loaded on demand. Product images are stored under /public/products, ensuring no CORS issues and consistent embedding generation.
+
+When the catalog is loaded, embeddings for all 60 product images are computed once per session. To optimize performance, this process is throttled with limited concurrency and cached in localStorage, so repeat visits don’t require reprocessing. Users can then upload an image or provide an image URL. A preview of the input image is shown, and an embedding is generated using MobileNet’s feature extraction. Cosine similarity is computed between the input embedding and the stored catalog embeddings, producing a ranked list of visually similar items.
+
+The interface provides interactive controls: a similarity threshold slider to filter weaker matches and a category dropdown to narrow results. Styling is minimal yet polished, with clear hierarchy, spacing, and accessibility-friendly colors.
